@@ -3,6 +3,12 @@ div(ng-include='"components/navbar/navbar.html"')
 .container
   poster(link='{{movieData.poster_path}}' size="w185")
   h1 {{movieData.title}}
+  h2 {{}}
+  h3 {{movieData.release_date | date:'yyyy'}}
+  h4 {{movieData.runtime}} min
+  p {{movieData.overview}}
+  
+  button.btn.btn-default(ng-click="addMovie()") I have this movie, add it.
 
 footer.footer
   .container
@@ -11,4 +17,4 @@ footer.footer
       = ' | '
       a(href='https://twitter.com/AVanVlack') @AVanVlack
       = ' | '
-      a(href='https://github.com/DaftMonk/generator-angular-fullstack/issues?state=open') Issues
+      a(href='https://github.com/AVanVlack/MovieShare/issues?state=open') Issues

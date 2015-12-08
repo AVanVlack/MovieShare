@@ -7,4 +7,7 @@ angular.module('movieSyncApp')
       console.log(data);
       $scope.movieData = data;
     })
+    $scope.addMovie = function(){
+      console.log("movie added!")
+    }
   });
