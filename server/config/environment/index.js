@@ -49,6 +49,9 @@ var all = {
     clientSecret: process.env.TWITTER_SECRET || 'secret',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/twitter/callback'
   },
+  tmdb: {
+    clientID: process.env.TMDB_ID
+  },
 
 };
 

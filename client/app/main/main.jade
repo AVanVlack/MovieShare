@@ -1,27 +1,20 @@
 div(ng-include='"components/navbar/navbar.html"')
 
-header#banner.hero-unit
-  .container
-    h1 'Allo, 'Allo!
-    p.lead Kick-start your next web app with Angular Fullstack
-    img(src='assets/images/yeoman.png', alt='I\'m Yeoman')
-
 .container
+form.thing-form
+  label Syncs in realtime across clients
+  p.input-group
+    input.form-control(type='text', placeholder='Search movies', ng-model='searchInput')
+    span.input-group-btn
+      button.btn.btn-primary(type='submit', ng-click='searchToBorrow()') Add New
   .row
     .col-lg-12
       h1.page-header Features:
-      ul.nav.nav-tabs.nav-stacked.col-md-4.col-lg-4.col-sm-6(ng-repeat='thing in awesomeThings')
+      ul.col-md-4.col-lg-4.col-sm-6(ng-repeat='thing in movieList')
         li
-          a(href='#', tooltip='{{thing.info}}')
-            | {{thing.name}}
-            button.close(type='button', ng-click='deleteThing(thing)') ×
-
-  form.thing-form
-    label Syncs in realtime across clients
-    p.input-group
-      input.form-control(type='text', placeholder='Add a new thing here.', ng-model='newThing')
-      span.input-group-btn
-        button.btn.btn-primary(type='submit', ng-click='addThing()') Add New
+          a(href='#', tooltip='{{thing.title}}')
+            | {{thing.title}}
+          poster(link='{{thing.poster_path}}' size="w185")
 
 footer.footer
   .container

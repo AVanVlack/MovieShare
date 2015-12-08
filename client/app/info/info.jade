@@ -1,0 +1,14 @@
+div(ng-include='"components/navbar/navbar.html"')
+
+.container
+  poster(link='{{movieData.poster_path}}' size="w185")
+  h1 {{movieData.title}}
+
+footer.footer
+  .container
+    p
+      | Andrew VanVlack 2015
+      = ' | '
+      a(href='https://twitter.com/AVanVlack') @AVanVlack
+      = ' | '
+      a(href='https://github.com/DaftMonk/generator-angular-fullstack/issues?state=open') Issues
