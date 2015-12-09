@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('movieSyncApp')
-  .controller('SignupCtrl', function ($scope, Auth, $location, $window) {
+  .controller('SignupCtrl', function ($scope, Auth, $location, $window, osmFactory) {
     $scope.user = {};
     $scope.errors = {};
 
@@ -9,10 +9,17 @@ angular.module('movieSyncApp')
       $scope.submitted = true;
 
       if(form.$valid) {
-        Auth.createUser({
-          name: $scope.user.name,
-          email: $scope.user.email,
-          password: $scope.user.password
+        osmFactory.getGeolocation($scope.user.location).then(function(loc){
+          console.log(loc);
+          return Auth.createUser({
+            name: $scope.user.name,
+            email: $scope.user.email,
+            password: $scope.user.password,
+            location: {
+              place: loc[0].address.city + ", " + loc[0].address.state,
+              coords: [loc[0].lon, loc[0].lat]
+            }
+          })
         })
         .then( function() {
           // Account created, redirect to home

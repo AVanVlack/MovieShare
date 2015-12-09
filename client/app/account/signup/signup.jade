@@ -31,6 +31,13 @@ div(ng-include='"components/navbar/navbar.html"')
             | Password must be at least 3 characters.
           p.help-block(ng-show='form.password.$error.mongoose')
             | {{ errors.password }}
+        
+        .form-group(ng-class='{ "has-success": form.name.$valid && submitted,\
+        "has-error": form.name.$invalid && submitted }')
+          label Location
+          input.form-control(type='text', name='location', ng-model='user.location', required='')
+          p.help-block(ng-show='form.name.$error.required && submitted')
+            | A location is required
 
         div
           button.btn.btn-inverse.btn-lg.btn-login(type='submit')

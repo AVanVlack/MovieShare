@@ -1,20 +1,34 @@
 div(ng-include='"components/navbar/navbar.html"')
 
 .container
-form.thing-form
-  label Syncs in realtime across clients
-  p.input-group
-    input.form-control(type='text', placeholder='Search movies', ng-model='searchInput')
-    span.input-group-btn
-      button.btn.btn-primary(type='submit', ng-click='searchToBorrow()') Add New
-  .row
-    .col-lg-12
-      h1.page-header Features:
-      ul.col-md-4.col-lg-4.col-sm-6(ng-repeat='thing in movieList')
-        li
-          a(href='#', tooltip='{{thing.title}}')
-            | {{thing.title}}
-          poster(link='{{thing.poster_path}}' size="w185")
+.btn-group
+  button.btn-default.btn(btn-radio="'barrow'" ng-model="search") Search to barrow
+  button.btn-default.btn(btn-radio="'add'" ng-model="search") Search to add
+  
+
+.jumbotron(ng-show="search === 'barrow'")
+  form.thing-form
+    .input-group
+      input.form-control(type='text', placeholder='Enter your location', ng-model='searchInput')
+      span.input-group-btn
+        button.btn.btn-primary(type='submit', ng-click='searchToBorrow()') Find Movies
+      select.form-control(ng-options="distance.label for distance in distances" ng-model="distanceSelect")
+      button.btn.btn-default(ng-click="geolocationToBorrow()") Use location
+            
+.jumbotron(ng-show="search === 'add'")
+  form.thing-form
+    .input-group
+      input.form-control(type='text', placeholder='Search for a Movie', ng-model='searchInput')
+      span.input-group-btn
+        button.btn.btn-primary(type='submit', ng-click='searchForAll()') Find Movies
+.row
+  .col-lg-12
+    h1.page-header Features:
+    ul.col-md-4.col-lg-4.col-sm-6(ng-repeat='movie in movieList')
+      li
+        a(href='{{"/info/" + (movie.tmdb_id || movie.id)}}', tooltip='{{movie.title}}')
+          | {{movie.title}}
+        poster(link='{{movie.poster_path}}' size="w185")
 
 footer.footer
   .container

@@ -15,6 +15,10 @@ var UserSchema = new Schema({
   hashedPassword: String,
   provider: String,
   salt: String,
+  location: {
+    place: String,
+    coords: Array
+  },
   twitter: {},
   github: {}
 });
@@ -49,7 +53,8 @@ UserSchema
   .get(function() {
     return {
       '_id': this._id,
-      'role': this.role
+      'role': this.role,
+      'location': this.location
     };
   });
 
