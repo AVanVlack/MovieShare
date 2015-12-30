@@ -26,9 +26,22 @@ div(ng-include='"components/navbar/navbar.html"')
     h1.page-header Features:
     ul.col-md-4.col-lg-4.col-sm-6(ng-repeat='movie in movieList')
       li
-        a(href='{{"/info/" + (movie.tmdb_id || movie.id)}}', tooltip='{{movie.title}}')
+        a(href='', tooltip='{{movie.title}}' ng-click="moreInfo(movie.id || movie.tmdb_id, movie._id)")
           | {{movie.title}}
         poster(link='{{movie.poster_path}}' size="w185")
+        
+.overlay(ng-show="displayInfo")
+  .listing
+    button.btn.btn-warning(ng-click="displayInfo = false") X
+    button.btn.btn-info(ng-click="barrow()" ng-show="movieData.tmdb_id !== null") Barrow this movie
+    poster(link='{{movieData.poster_path}}' size="w185")
+    h1 {{movieData.title}}
+    h2 {{}}
+    h3 {{movieData.release_date | date:'yyyy'}}
+    h4 {{movieData.runtime}} min
+    p {{movieData.overview}}
+
+    button.btn.btn-default(ng-click="addMovie()") I have this movie, add it.
 
 footer.footer
   .container

@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('movieSyncApp')
-  .controller('MainCtrl', function ($scope, $http, socket, tmdb, osmFactory) {
+  .controller('MainCtrl', function ($scope, $http, socket, tmdb, osmFactory, Auth) {
     $scope.movieList = [];
+    $scope.movieData = {};
+    $scope.currentUser = Auth.getCurrentUser();
     $scope.distances = [
       {label: "10 Miles", value: 10},
       {label: "20 Miles", value: 20},
@@ -14,6 +16,7 @@ angular.module('movieSyncApp')
     ]
     $scope.distanceSelect = $scope.distances[0];
     $scope.search = 'barrow';
+    $scope.displayInfo = false;
 
     $http.get('/api/movies').success(function(awesomeThings) {
       $scope.movieList = awesomeThings;
@@ -29,6 +32,24 @@ angular.module('movieSyncApp')
       })
     };
 
+    $scope.moreInfo = function(movieID, id){
+      $scope.movieData = {};
+      tmdb.movieData(movieID).then(function(data){
+        console.log(data);
+        $scope.movieData = data;
+        if(id){
+          $scope.movieData.barrowID = id
+        }
+      });
+      $scope.displayInfo = true;
+
+    };
+
+    $scope.barrow = function(){
+      $http.patch('/api/movies/req', {movie: $scope.movieData.barrowID}).success(function(res){
+        console.log(res)
+      })
+    };
     $scope.geolocationToBorrow = function(){
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
@@ -40,6 +61,27 @@ angular.module('movieSyncApp')
       } else {
         console.log('This dont work')
       }
+    }
+
+    $scope.addMovie = function(){
+      console.log($scope.currentUser)
+      var newMovie = {
+        owner: $scope.currentUser._id,
+        title: $scope.movieData.title,
+        poster_path: $scope.movieData.poster_path,
+        backdrop_path: $scope.movieData.backdrop_path,
+        status: {
+          checkedOut: 'false' //request, true, false
+        },
+        tmdb_id: $scope.movieData.id,
+        release_date: $scope.movieData.release_date,
+        tagline: $scope.movieData.tagline,
+        overview: $scope.movieData.overview,
+        loc: $scope.currentUser.location.coords
+      }
+      $http.post('/api/movies', newMovie).success(function(res){
+        console.log("movie added!");
+      })
     }
 
     $scope.searchForAll = function() {

@@ -4,12 +4,12 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var MovieSchema = new Schema({
-  owner: String,
+  owner: Schema.Types.ObjectId,
   title: String,
   poster_path: String,
   backdrop_path: String,
   status: {
-    borrower: String,
+    borrower: Schema.Types.ObjectId,
     checkedOut: String //request, true, false
   },
   tmdb_id: Number,

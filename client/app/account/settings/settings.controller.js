@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('movieSyncApp')
-  .controller('SettingsCtrl', function ($scope, User, Auth) {
+  .controller('SettingsCtrl', function ($scope, User, Auth, $http) {
     $scope.errors = {};
+    $scope.own = [];
+    $scope.barrowing = [];
+    $scope.currentUser = Auth.getCurrentUser()
+
 
     $scope.changePassword = function(form) {
       $scope.submitted = true;
@@ -18,4 +22,13 @@ angular.module('movieSyncApp')
         });
       }
 		};
+    $http.get('/api/movies/user').success(function(data){
+      console.table(data)
+      data.forEach(function(item){
+        if(item.owner === $scope.currentUser._id){
+          $scope.own.push(item);
+        } else {$scope.barrowing.push(item)}
+
+      })
+    })
   });
