@@ -1,8 +1,38 @@
 div(ng-include='"components/navbar/navbar.html"')
 .container
-  .row
+  .row 
     .col-sm-12
-      h1 Change Password
+      h2 Movie Manager
+    .col-sm-12
+      ul.list-group
+        li.list-group-item.list-group-item-info.text-center(ng-show='own.length > 0') 
+          h5 Movies I own
+        li.list-group-item(ng-repeat='movie in own') 
+          b {{movie.title}}
+          span(ng-show='movie.status.checkedOut === "true"')  - Checked Out by:
+            span.pull-right.clearfix
+              button.btn.btn-warning.btn-xs(ng-click='returnMovie(movie._id)') Returned
+              button.btn.btn-danger.btn-xs(ng-click='deleteMovie(movie._id)') X
+          span(ng-show='movie.status.checkedOut === "request"')
+            i  - requested by: 
+            span.pull-right.clearfix
+              button.btn.btn-warning.btn-xs(ng-click='approve(movie._id)') Approve
+              button.btn.btn-danger.btn-xs(ng-click='deny(movie._id)') Deny
+              button.btn.btn-danger.btn-xs(ng-click='deleteMovie(movie._id)') X
+          span(ng-show='movie.status.checkedOut === "false"')
+            span.pull-right.clearfix
+              button.btn.btn-danger.btn-xs(ng-click='deleteMovie(movie._id)') X
+            
+    .col-sm-12
+      ul.list-group
+          li.list-group-item.list-group-item-info.text-center(ng-show='barrowing.length > 0')
+            h5 Movies I am barrowing
+          li.list-group-item(ng-repeat='movie in barrowing') 
+            b {{movie.title}} 
+            | - {{movie.status.checkedOut}}
+          
+    .col-sm-12
+      h2 Change Password
     .col-sm-12
       form.form(name='form', ng-submit='changePassword(form)', novalidate='')
         .form-group
@@ -18,14 +48,4 @@ div(ng-include='"components/navbar/navbar.html"')
 
         p.help-block  {{ message }}
         button.btn.btn-lg.btn-primary(type='submit') Save changes
-        
-    .col-sm-12
-      ul.list-group
-          li.list-group-item(ng-repeat='movie in own') {{movie.title}} - {{movie.status.checkedOut}}
-            span.btn.btn-info.badge Remove
-            
-    .col-sm-12
-      ul.list-group
-          li.list-group-item(ng-repeat='movie in barrowing') {{movie.title}} - {{movie.status.checkedOut}}
-            span.btn.btn-info.badge Approve
     

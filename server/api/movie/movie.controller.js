@@ -13,12 +13,10 @@ exports.index = function(req, res) {
 
 //Get list of movies the user ownes and barrowing
 exports.userMovies = function(req, res){
-  console.log(req)
   Movie.
   find({
     $or: [{'status.borrower': req.user._id},{owner: req.user._id}]
   }, function(err, movies){
-    console.log(movies);
     if(err) { return handleError(res, err); }
     return res.status(200).json(movies);
   });
@@ -30,18 +28,18 @@ exports.show = function(req, res) {
     loc: {
         $near: [req.query.long,req.query.lat] || [-122.7948,45.5422],
         $maxDistance: req.query.distance || 3.19280180152744
-    }
-}).exec(function(err, locations) {
-    if (err) {
-        return res.json(500, err);
-    }
+        }
+    }).exec(function(err, locations) {
+    if (err) {return res.json(500, err);}
     res.json(200, locations);
 });
 };
 
 // Creates a new movie in the DB.
 exports.create = function(req, res) {
-  Movie.create(req.body, function(err, movie) {
+  var newMovie = req.body
+  newMovie.owner = req.user._id
+  Movie.create(newMovie, function(err, movie) {
     if(err) { return handleError(res, err); }
     return res.status(201).json(movie);
   });
@@ -78,13 +76,31 @@ exports.barrow = function(req,res,next) {
   })
 }
 
-//Approve a request to barrow.
-exports.approve = function(req, res) {
-  console.log(req);
+
+//Deny Request
+exports.deny = function(req,res,next) {
   Movie.findById(req.body.movie, function (err, movie) {
     if (err) { return handleError(res, err); }
     if(!movie) { return res.status(404).send('Not Found'); }
-    if(req.user._id !== movie.owner){ return res.status(401).send('Wrong user account')}
+    if(movie.status.checkedOut !== "request"){
+      return res.status(403).send('No request on movie')
+    }
+    var updated = movie;
+    updated.status.checkedOut = "false";
+    updated.status.borrower = null;
+    updated.save(function(err){
+      return res.status(200).send()
+    })
+  })
+}
+
+//Approve a request to barrow.
+exports.approve = function(req, res) {
+  Movie.findById(req.body.movie, function (err, movie) {
+    if (err) { return handleError(res, err); }
+    if(!movie) { return res.status(404).send('Not Found'); }
+    console.log(req.user._id, movie.owner);
+    if(!req.user._id.equals(movie.owner)){ return res.status(401).send('Wrong user account')}
     if(movie.status.checkedOut !== "request"){
       return res.status(403).send('Request for barrow not set')
     }
@@ -92,6 +108,24 @@ exports.approve = function(req, res) {
     updated.status.checkedOut = "true";
     updated.save(function(err){
       return res.status(200).send()
+    })
+  })
+}
+//Returns a movie
+exports.return = function(req, res) {
+  Movie.findById(req.body.movie, function (err, movie) {
+    if (err) { return handleError(res, err); }
+    if(!movie) { return res.status(404).send('Not Found'); }
+    console.log(req.user._id, movie.owner);
+    if(!req.user._id.equals(movie.owner)){ return res.status(401).send('Wrong user account')}
+    if(movie.status.checkedOut !== "true"){
+      return res.status(403).send('Movie not checked out')
+    }
+    var updated = movie;
+    updated.status.checkedOut = "false";
+    updated.status.borrower = null;
+    updated.save(function(err){
+      return res.status(200).send(updated.status)
     })
   })
 }

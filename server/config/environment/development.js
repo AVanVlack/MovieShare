@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/moviesync-dev'
   },
 
-  seedDB: true
+  seedDB: false
 };

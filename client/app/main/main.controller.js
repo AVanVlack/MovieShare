@@ -66,7 +66,6 @@ angular.module('movieSyncApp')
     $scope.addMovie = function(){
       console.log($scope.currentUser)
       var newMovie = {
-        owner: $scope.currentUser._id,
         title: $scope.movieData.title,
         poster_path: $scope.movieData.poster_path,
         backdrop_path: $scope.movieData.backdrop_path,

@@ -22,6 +22,30 @@ angular.module('movieSyncApp')
         });
       }
 		};
+    $scope.deleteMovie = function(movieID){
+      $http.delete('/api/movies/' + movieID).success(function(){
+        _.remove($scope.own, {_id: movieID})
+      })
+    };
+    $scope.approve = function(movieID){
+      $http.patch('/api/movies/approve/', {movie: movieID}).success(function(){
+        var index = _.find($scope.own, {_id: movieID})
+        index.status.checkedOut = 'true';
+      });
+    }
+    $scope.deny = function(movieID){
+      $http.patch('/api/movies/deny/', {movie: movieID}).success(function(){
+        var index = _.find($scope.own, {_id: movieID})
+        index.status.checkedOut = 'false';
+      });
+    }
+    $scope.returnMovie = function(movieID){
+      $http.patch('/api/movies/return/', {movie: movieID}).success(function(){
+        var index = _.find($scope.own, {_id: movieID})
+        index.status.checkedOut = 'false';
+      });
+    }
+
     $http.get('/api/movies/user').success(function(data){
       console.table(data)
       data.forEach(function(item){
