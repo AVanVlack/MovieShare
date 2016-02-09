@@ -1,57 +1,113 @@
-.thing-form {
-    margin: 20px 0;
+body {
+  background-color: #242424;
+  color: white;
 }
-
-#banner {
-    border-bottom: none;
-    margin-top: -20px;
-}
-
-#banner h1 {
-    font-size: 60px;
-    line-height: 1;
-    letter-spacing: -1px;
-}
-
-.hero-unit {
-    position: relative;
-    padding: 30px 15px;
-    color: #F5F5F5;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    background: #4393B9;
-}
-
 .footer {
-    text-align: center;
-    padding: 30px 0;
-    margin-top: 70px;
-    border-top: 1px solid #E5E5E5;
+  text-align: center;
+  padding: 30px 0;
+  margin-top: 70px;
+  border-top: 1px solid #E5E5E5;
 }
 
-.navbar-text {
-    margin-left: 15px;
+/********Search Bar**********/
+
+.search-bar {
+  background-color: #1C1C1C;
+  border-radius: 0 !important;
+}
+select:not([multiple]) {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: .5em;
 }
 
-/********overlay**********/
+.input-style {
+  background-color: inherit;
+  border-radius: 0;
+  border: 2px solid #12658F;
+  color: #12658F;
+  font-weight: bold;
+  height: 40px;
+}
+
+.search-input-blue {
+  border: 2px solid #12658F;
+  color: #12658F;
+}
+
+.search-input-green {
+  border: 2px solid #17715E;
+  color: #17715E;
+}
+.search-bar > form {
+  width: 100%;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.search-btn {
+  margin-top: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.search-input {
+  flex-grow: 100;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#distance {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.label-top {
+  position: relative;
+  min-width: 100px;
+  /*margin-right: 25px;*/
+  margin-top: 30px;
+}
+.label-top > label {
+  position: absolute;
+  bottom: 35px;
+  left: 3px;
+}
+
+/********Movie Listing**********/
+
+li {
+  list-style-type: none;
+}
+.movie {
+  margin: 10px 0;
+  padding: 10px 0;
+  text-align: center;
+}
+.movie-poster {
+  display: inline-block;
+}
+
+/********Overlay**********/
 
 .overlay {
-  position: absolute;
-  display: flex;
-  background: black;
-  justify-content: center;
-  align-items: center;
-  height: 100%
+  position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
+  display: flex;
+  background: rgba(0, 0, 0, 0.9);
+  background-size: cover;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 3;
 }
-.listing{
-  color:white;
+.listing {
+  color: white;
   max-width: 800px
 }
-.close{
-  
-}
+.close {}

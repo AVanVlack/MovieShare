@@ -1,53 +1,76 @@
-div(ng-include='"components/navbar/navbar.html"')
-
-.container
-.btn-group
-  button.btn-default.btn(btn-radio="'barrow'" ng-model="search") Search to barrow
-  button.btn-default.btn(btn-radio="'add'" ng-model="search") Search to add
-  
-
-.jumbotron(ng-show="search === 'barrow'")
-  form.thing-form
-    .input-group
-      input.form-control(type='text', placeholder='Enter your location', ng-model='searchInput')
-      span.input-group-btn
-        button.btn.btn-primary(type='submit', ng-click='searchToBorrow()') Find Movies
-      select.form-control(ng-options="distance.label for distance in distances" ng-model="distanceSelect")
-      button.btn.btn-default(ng-click="geolocationToBorrow()") Use location
-            
-.jumbotron(ng-show="search === 'add'")
-  form.thing-form
-    .input-group
-      input.form-control(type='text', placeholder='Search for a Movie', ng-model='searchInput')
-      span.input-group-btn
-        button.btn.btn-primary(type='submit', ng-click='searchForAll()') Find Movies
-.row
-  .col-lg-12
-    h1.page-header Features:
-    ul.col-md-4.col-lg-4.col-sm-6(ng-repeat='movie in movieList')
-      li
-        a(href='', tooltip='{{movie.title}}' ng-click="moreInfo(movie.id || movie.tmdb_id, movie._id)")
-          | {{movie.title}}
-        poster(link='{{movie.poster_path}}' size="w185")
-        
-.overlay(ng-show="displayInfo")
+.overlay(ng-show="displayModal" id='modal')
   .listing
-    button.btn.btn-warning(ng-click="displayInfo = false") X
-    button.btn.btn-info(ng-click="barrow()" ng-show="movieData.tmdb_id !== null") Barrow this movie
     poster(link='{{movieData.poster_path}}' size="w185")
+    button.btn.btn-warning.pull-right(ng-click="displayModal = false") X
     h1 {{movieData.title}}
     h2 {{}}
     h3 {{movieData.release_date | date:'yyyy'}}
     h4 {{movieData.runtime}} min
     p {{movieData.overview}}
+    button.btn.btn-info(ng-click="barrow()" ng-show="movieData.tmdb_id !== null") Barrow this movie
+    button.btn.btn-default(ng-click="addMovie()") I own this movie, add it.
+    
+div(ng-include='"components/navbar/navbar.html"' ng-hide='displayModal')
+.container(ng-class="{'modal-open': displayModal}")
+  //- .row
+  //-   .col-lg-12.col-md-12.text-center
+  //-     .btn-group
+  //-       button.btn-default.btn(btn-radio="'barrow'" ng-model="search") Movies to barrow
+  //-       button.btn-default.btn(btn-radio="'add'" ng-model="search") Add Movies
+  .row
+    .jumbotron.search-bar(ng-show="search === 'barrow'")
+      div
+        |Search:&nbsp
+        a(ng-click='search = "barrow"') Near Me
+        | &nbsp|&nbsp
+        a(ng-click='search = "add"') All
+      form
+        .search-input.form-group.label-top
+          label Find movies near:
+          input.form-control.search-input-blue.input-style(type='text', placeholder='City & State', ng-model='searchInput')
+          //- span.input-group-btn
+          //-   button.btn.btn-success(ng-click="geolocationToBorrow()")
+          //-     i.fa.fa-location-arrow  
+        #distance.form-group.label-top
+          label Within:
+          select.form-control.search-input-blue.input-style(ng-options="distance.label for distance in distances" ng-model="distanceSelect")
+        button.search-btn.btn.search-input-green.input-style(type='submit', ng-click='searchToBorrow()') 
+          i.fa.fa-search 
+          |&nbsp Search
+        
+  .row            
+    .jumbotron.search-bar(ng-show="search === 'add'")
+      div
+        |Search:&nbsp
+        a(ng-click='search = "barrow"') Near Me
+        | &nbsp|&nbsp
+        a(ng-click='search = "add"') All
+      form
+        .search-input.form-group.label-top
+          label Find your movies:
+          input.form-control.input-style(type='text', placeholder='Movie Title', ng-model='searchInput')
+        button.search-btn.btn.input-style.search-input-green(type='submit', ng-click='searchForAll()')
+          i.fa.fa-search
+          |&nbsp Search
+  .row
+    .col-lg-12
+      ul
+        li.col-md-3.col-lg-3.col-sm-6(ng-repeat-start='movie in movieList')
+          .movie
+            a(href='', tooltip='{{movie.title}}' ng-click="moreInfo(movie.id || movie.tmdb_id, movie._id)")
+              poster.movie-poster.img-responsive(link='{{movie.poster_path}}' size="w342")
+              p {{movie.title}}
+              | {{movie.release_date | date: 'yyyy'}}
+        .clearfix(ng-if="$index % 4 == 3")
+        div(ng-repeat-end="")
+          
+  
 
-    button.btn.btn-default(ng-click="addMovie()") I have this movie, add it.
-
-footer.footer
-  .container
-    p
-      | Andrew VanVlack 2015
-      = ' | '
-      a(href='https://twitter.com/AVanVlack') @AVanVlack
-      = ' | '
-      a(href='https://github.com/AVanVlack/MovieShare/issues?state=open') Issues
+  footer.footer
+    .container
+      p
+        | Andrew VanVlack 2015
+        = ' | '
+        a(href='https://twitter.com/AVanVlack') @AVanVlack
+        = ' | '
+        a(href='https://github.com/AVanVlack/MovieShare/issues?state=open') Issues

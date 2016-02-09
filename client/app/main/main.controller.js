@@ -16,7 +16,8 @@ angular.module('movieSyncApp')
     ]
     $scope.distanceSelect = $scope.distances[0];
     $scope.search = 'barrow';
-    $scope.displayInfo = false;
+    $scope.displayModal = false;
+
 
     $http.get('/api/movies').success(function(awesomeThings) {
       $scope.movieList = awesomeThings;
@@ -33,15 +34,19 @@ angular.module('movieSyncApp')
     };
 
     $scope.moreInfo = function(movieID, id){
+      var modal = angular.element(document.querySelector('#modal'));
       $scope.movieData = {};
       tmdb.movieData(movieID).then(function(data){
         console.log(data);
+        modal.css({
+          'background-image': 'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url("http://image.tmdb.org/t/p/w1280/' + data.backdrop_path + '")'
+          })
         $scope.movieData = data;
         if(id){
           $scope.movieData.barrowID = id
         }
       });
-      $scope.displayInfo = true;
+      $scope.displayModal = true;
 
     };
 
@@ -54,6 +59,7 @@ angular.module('movieSyncApp')
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           function(location){
+            $scope.searchInput = 'long:' + location.coords.longitude + ", lat:" + location.coords.latitude
             updateMovieList({lon: location.coords.longitude ,lat: location.coords.latitude});
         },function(err){
             console.log(err);
