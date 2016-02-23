@@ -1,5 +1,3 @@
-ApiKey =
-
 angular.module("movieSyncApp")
   .factory("tmdb", function($http, $location, $q){
     return {
